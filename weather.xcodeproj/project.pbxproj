@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D2023692BBCF85100474277 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2D2023682BBCF85100474277 /* Alamofire */; };
+		2D20236B2BBCF85100474277 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 2D20236A2BBCF85100474277 /* AlamofireDynamic */; };
 		C60A0F8E2B92143900B87AB7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C60A0F8D2B92143900B87AB7 /* MapKit.framework */; };
 		C67C267E2BA417B40050CC5E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C67C267D2BA417B40050CC5E /* CoreLocation.framework */; };
 		C69C882C2B8F53C700A7D8D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69C882B2B8F53C700A7D8D2 /* AppDelegate.swift */; };
@@ -38,7 +40,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C60A0F8A2B8F612B00B87AB7 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = SOURCE_ROOT; };
 		C60A0F8D2B92143900B87AB7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		C67C267D2BA417B40050CC5E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		C69C88282B8F53C700A7D8D2 /* weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,6 +62,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D2023692BBCF85100474277 /* Alamofire in Frameworks */,
+				2D20236B2BBCF85100474277 /* AlamofireDynamic in Frameworks */,
 				C67C267E2BA417B40050CC5E /* CoreLocation.framework in Frameworks */,
 				C60A0F8E2B92143900B87AB7 /* MapKit.framework in Frameworks */,
 			);
@@ -124,7 +127,6 @@
 				C69C88342B8F53C900A7D8D2 /* Assets.xcassets */,
 				C69C88362B8F53C900A7D8D2 /* LaunchScreen.storyboard */,
 				C69C88392B8F53C900A7D8D2 /* Info.plist */,
-				C60A0F8A2B8F612B00B87AB7 /* map.png */,
 			);
 			path = weather;
 			sourceTree = "<group>";
@@ -162,6 +164,10 @@
 			dependencies = (
 			);
 			name = weather;
+			packageProductDependencies = (
+				2D2023682BBCF85100474277 /* Alamofire */,
+				2D20236A2BBCF85100474277 /* AlamofireDynamic */,
+			);
 			productName = weather;
 			productReference = C69C88282B8F53C700A7D8D2 /* weather.app */;
 			productType = "com.apple.product-type.application";
@@ -234,6 +240,9 @@
 				Base,
 			);
 			mainGroup = C69C881F2B8F53C700A7D8D2;
+			packageReferences = (
+				2D2023672BBCF85100474277 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			productRefGroup = C69C88292B8F53C700A7D8D2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -622,6 +631,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2D2023672BBCF85100474277 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2D2023682BBCF85100474277 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2D2023672BBCF85100474277 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		2D20236A2BBCF85100474277 /* AlamofireDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2D2023672BBCF85100474277 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = AlamofireDynamic;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C69C88202B8F53C700A7D8D2 /* Project object */;
 }
