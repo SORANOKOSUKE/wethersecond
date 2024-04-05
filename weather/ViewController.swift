@@ -13,6 +13,22 @@ import Alamofire
 import os
 import Combine
 
+struct WeatherForecast: Decodable {
+    let latitude: Double
+    let longitude: Double
+    let timezone: String
+    let daily: DailyWeatherData
+}
+
+struct DailyWeatherData: Decodable {
+    let time: [String]
+    let weather_code: [Int]
+    let temperature_2m_max: [Double]
+    let temperature_2m_min: [Double]
+}
+
+
+
 class ViewController: UIViewController,CLLocationManagerDelegate ,UIGestureRecognizerDelegate,UITabBarDelegate,UITableViewDataSource{
     @IBOutlet var mapView: MKMapView!
     let image =  UIImageView()
@@ -25,17 +41,57 @@ class ViewController: UIViewController,CLLocationManagerDelegate ,UIGestureRecog
     var weatherarray : [String] = []
 
     override func viewDidLoad() {
-        
+
     }
-    
+
     @IBAction func mapViewDidPress(_ sender: UITapGestureRecognizer) {
         let tapPoint = sender.location(in: view)
         let center = mapView.convert(tapPoint, toCoordinateFrom: mapView)
-        
+
         lon  = center.longitude
         lat  = center.latitude
     }
-    
+
+    func getURL(latitude: Double, longitude: Double) -> String {
+        let timezone = "Asia/Tokyo"
+        let daily = "weather_code"
+        let max = "temperature_2m_max"
+        let min = "temperature_2m_min"
+        let urlstr = "https://api.open-meteo.com/v1/forecast?"+"latitude=\(latitude)&longitude=\(longitude)&daily=\(daily),\(max),\(min)&timezone=\(timezone)"
+        return urlstr
+    }
+
+
+    //publisher
+    func getLocation(urlstr : String) -> PassthroughSubject<WeatherForecast, AFError> {
+        let subject = PassthroughSubject<WeatherForecast, AFError>()
+
+            AF.request(urlstr)
+                .publishDecodable(type: WeatherForecast.self)
+                .value()
+                .mapError { error in
+                    print("API request failed with error: \(error.localizedDescription)")
+                    return AFError.invalidURL(url: urlstr)
+                }
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        print("API request completed.")
+                    case .failure(let error):
+                        subject.send(completion: .failure(error))
+                    }
+                }, receiveValue: { weatherForecast in
+                    subject.send(weatherForecast)
+                    subject.send(completion: .finished)
+                })
+
+            return subject
+        }
+
+
+
+
+
     func getLocationInfo(latitude: Double, longitude: Double, completion: @escaping ([[String]]) -> Void) {
         let timezone = "Asia/Tokyo"
         let daily = "weather_code"
@@ -100,12 +156,32 @@ class ViewController: UIViewController,CLLocationManagerDelegate ,UIGestureRecog
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        getLocationInfo(latitude:lat,longitude:lon){ getArray in
-            self.weatherarray = getArray.flatMap{$0}
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
+        //getLocationInfo(latitude:lat,longitude:lon){ getArray in
+        //    self.weatherarray = getArray.flatMap{$0}
+        //    DispatchQueue.main.async {
+        //        self.tableView.reloadData()
+        //    }
+        //}
+        let cancellable = getLocation(urlstr: getURL(latitude: lat, longitude: lon))
+            .sink(receiveCompletion: { completion in
+                print("completion:\(completion)")
+                switch completion {
+                case .finished:
+                    print("API request completed.")
+                case .failure(let error):
+                    print("API request failed with error: \(error.localizedDescription)")
+                }
+            }, receiveValue: { weatherForecast in
+                for (index, date) in weatherForecast.daily.time.enumerated() {
+                    print("Date: \(date)")
+                    print("Weather code: \(weatherForecast.daily.weather_code[index])")
+                    print("Max temperature: \(weatherForecast.daily.temperature_2m_max[index])")
+                    print("Min temperature: \(weatherForecast.daily.temperature_2m_min[index])")
+                    print("time: \(weatherForecast.daily.time[index])")
+                }
+            })
+
+
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
